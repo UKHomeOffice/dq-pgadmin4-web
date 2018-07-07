@@ -1,0 +1,31 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ .KUBE_NAMESPACE }}
+  labels:
+    name: dq-pgadmin-client
+  name: dq-pgadmin-client
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: dq-pgadmin-client
+    spec:
+      containers:
+      - image: quay.io/ukhomeofficedigital/pgadmin4:latest
+        name: dq-pgadmin-client
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5050
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "800m"
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+        securityContext:
+          runAsNonRoot: true
+      restartPolicy: Always

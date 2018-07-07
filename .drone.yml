@@ -1,0 +1,58 @@
+pipeline:
+
+  build:
+    image: docker:17.09.1
+    environment:
+      - DOCKER_HOST=tcp://172.17.0.1:2375
+    commands:
+      - docker build -t pgadmin .
+    when:
+      branch: master
+      event: push
+
+
+  image_to_quay:
+    image: docker:17.09.1
+    secrets:
+      - docker_username
+      - docker_password
+    environment:
+      - DOCKER_HOST=tcp://172.17.0.1:2375
+    commands:
+      - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_PASSWORD} quay.io
+      - docker tag pgadmin quay.io/ukhomeofficedigital/pgadmin:$${DRONE_COMMIT_SHA}
+      - docker push quay.io/ukhomeofficedigital/pgadmin:$${DRONE_COMMIT_SHA}
+    when:
+      branch: master
+      event: push
+
+  deploy_to_dev:
+    image: quay.io/ukhomeofficedigital/kd
+    environment:
+      - KUBE_NAMESPACE=dq-apps-notprod
+      - INSECURE_SKIP_TLS_VERIFY=true
+    commands:
+      - export KUBE_TOKEN=$$NOTPROD_KUBE_TOKEN
+      - export KUBE_SERVER=$$NOTPROD_KUBE_SERVER
+      - kd -f deployment.yml
+    secrets:
+      - NOTPROD_KUBE_TOKEN
+      - NOTPROD_KUBE_SERVER
+    when:
+      event: [push, tag, deployment]
+
+  deploy_to_prod:
+    image: quay.io/ukhomeofficedigital/kd
+    environment:
+      - KUBE_NAMESPACE=dq-apps
+      - INSECURE_SKIP_TLS_VERIFY=true
+    commands:
+      - export KUBE_TOKEN=$$PROD_KUBE_TOKEN
+      - export KUBE_SERVER=$$PROD_KUBE_SERVER
+      - kd -f deployment.yml
+    secrets:
+      - PROD_KUBE_TOKEN
+      - PROD_KUBE_SERVER
+    when:
+      environment: production
+      event: deployment
