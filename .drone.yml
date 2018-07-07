@@ -20,7 +20,7 @@ pipeline:
       - DOCKER_HOST=tcp://172.17.0.1:2375
     commands:
       - docker login -u=$${DOCKER_USERNAME} -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag pgadmin quay.io/ukhomeofficedigital/pgadmin4:$${DRONE_COMMIT_SHA}
+      - docker tag pgadmin4 quay.io/ukhomeofficedigital/pgadmin4:$${DRONE_COMMIT_SHA}
       - docker push quay.io/ukhomeofficedigital/pgadmin4:$${DRONE_COMMIT_SHA}
     when:
       branch: master
