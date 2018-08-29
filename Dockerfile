@@ -1,5 +1,7 @@
 FROM python:2-alpine3.7
+LABEL maintainer="James.Rowley1@homeoffice.gsi.gov.uk"
 
+ENV USERMAP_UID 1000
 ENV PGADMIN_VERSION=3.0 \
     PYTHONDONTWRITEBYTECODE=1
 
@@ -21,6 +23,6 @@ EXPOSE 5050
 
 COPY config_distro.py /usr/local/lib/python2.7/site-packages/pgadmin4/
 
-USER 1000:1000
+USER ${USERMAP_UID}
 CMD ["python", "./usr/local/lib/python2.7/site-packages/pgadmin4/pgAdmin4.py"]
 VOLUME /pgadmin/

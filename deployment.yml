@@ -8,6 +8,7 @@ metadata:
   name: dq-pgadmin-client
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   template:
     metadata:
       labels:
@@ -17,6 +18,9 @@ spec:
       - image: quay.io/ukhomeofficedigital/pgadmin4:latest
         name: dq-pgadmin-client
         imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
         ports:
           - containerPort: 5050
         resources:
@@ -26,6 +30,4 @@ spec:
           requests:
             memory: "1Gi"
             cpu: "500m"
-        securityContext:
-          runAsNonRoot: true
       restartPolicy: Always
