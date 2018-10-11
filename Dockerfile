@@ -2,6 +2,7 @@ FROM python:2-alpine3.7
 LABEL maintainer="James.Rowley1@homeoffice.gsi.gov.uk"
 
 ENV USERMAP_UID 1000
+ENV USERMAP_GID 50
 ENV PGADMIN_VERSION=3.0 \
     PYTHONDONTWRITEBYTECODE=1
 
@@ -13,11 +14,10 @@ RUN apk add --no-cache postgresql \
 RUN apk add --no-cache alpine-sdk postgresql-dev \
  && pip install --upgrade pip \
  && echo "https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v${PGADMIN_VERSION}/pip/pgadmin4-${PGADMIN_VERSION}-py2.py3-none-any.whl" | pip install --no-cache-dir -r /dev/stdin \
- && apk del alpine-sdk \
- && addgroup -g 50 -S pgadmin \
- && adduser -D -S -h /pgadmin -s /sbin/nologin -u 1000 -G pgadmin pgadmin \
+ && addgroup -g ${USERMAP_GID} -S ${USERMAP_GID} \
+ && adduser -D -S -h /pgadmin -s /sbin/nologin -u ${USERMAP_UID} -G ${USERMAP_GID} ${USERMAP_UID} \
  && mkdir -p /pgadmin/config /pgadmin/storage \
- && chown -R 1000:50 /pgadmin
+ && chown -R ${USERMAP_UID}:${USERMAP_GID} /pgadmin
 
 EXPOSE 5050
 
