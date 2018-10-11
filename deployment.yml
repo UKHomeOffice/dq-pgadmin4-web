@@ -23,6 +23,9 @@ spec:
           runAsUser: 1000
         ports:
           - containerPort: 5050
+        volumeMounts:
+        - name: pgadmin-volume
+          mountPath: /volume
         resources:
           limits:
             memory: "1Gi"
@@ -30,4 +33,7 @@ spec:
           requests:
             memory: "1Gi"
             cpu: "500m"
+      volumes:
+      - name: pgadmin-volume
+        emptyDir: {}
       restartPolicy: Always
