@@ -1,4 +1,4 @@
-FROM python:2-alpine3.7
+FROM python:2-alpine3.9
 LABEL maintainer="James.Rowley1@homeoffice.gsi.gov.uk"
 
 ENV USERMAP_UID 1000
