@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .KUBE_NAMESPACE }}
@@ -11,6 +11,9 @@ metadata:
     {{ if eq .ENV "notprod" }}downscaler/uptime: Mon-Sun 07:00-23:00 Europe/London{{ end }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: dq-pgadmin-client
   revisionHistoryLimit: 3
   template:
     metadata:
