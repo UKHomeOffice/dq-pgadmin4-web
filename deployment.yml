@@ -8,7 +8,7 @@ metadata:
   name: dq-pgadmin-client
   annotations:
     environment: {{ .ENV }}
-    {{ if eq .ENV "notprod" }}downscaler/uptime: Mon-Sun 07:00-23:00 Europe/London{{ end }}
+    {{ if eq .ENV "notprod" }}downscaler/uptime: Mon-Fri 07:00-18:30 Europe/London{{ end }}
 spec:
   replicas: 1
   selector:
